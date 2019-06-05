@@ -44,7 +44,7 @@ class ArangoTask implements Callable<long[]> {
         long diff = (endTime - startTime)/1000000;
         arangoDB.shutdown();
         
-        return new long[]{cursor.first(), diff};
+        return new long[]{Long.valueOf(cursor.first().toString(), diff};
     }
 }
 
