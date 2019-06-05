@@ -37,14 +37,14 @@ class ArangoTask implements Callable<long[]> {
     @Override
     public long[] call() throws Exception {
  
-        String query = "FOR v IN "+depth+".."+depth+" OUTBOUND 'vertex/"+root+"' edge RETURN distinct v._id";
+        String query = "FOR v IN "+depth+".."+depth+" OUTBOUND 'vertex/"+root+"' edge OPTIONS {bfs: true, uniqueVertices: 'global'} COLLECT WITH COUNT INTO counter RETURN counter";
         long startTime = System.nanoTime();
-        ArangoCursor<String> cursor = db.query(query, null, new AqlQueryOptions().count(true), String.class);
+        ArangoCursor<String> cursor = db.query(query, null, null, String.class);
         long endTime = System.nanoTime();
         long diff = (endTime - startTime)/1000000;
         arangoDB.shutdown();
         
-        return new long[]{cursor.count(), diff};
+        return new long[]{cursor.first(), diff};
     }
 }
 
