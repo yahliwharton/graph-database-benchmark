@@ -39,12 +39,12 @@ class ArangoTask implements Callable<long[]> {
  
         String query = "FOR v IN "+depth+".."+depth+" OUTBOUND 'vertex/"+root+"' edge OPTIONS {bfs: true, uniqueVertices: 'global'} COLLECT WITH COUNT INTO counter RETURN counter";
         long startTime = System.nanoTime();
-        ArangoCursor<String> cursor = db.query(query, null, null, String.class);
+        ArangoCursor<Long> cursor = db.query(query, null, null, Long.class);
         long endTime = System.nanoTime();
         long diff = (endTime - startTime)/1000000;
         arangoDB.shutdown();
         
-        return new long[]{Long.valueOf(cursor.first().toString(), diff};
+        return new long[]{cursor.first(), diff};
     }
 }
 
